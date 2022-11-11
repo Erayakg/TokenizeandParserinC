@@ -1,21 +1,40 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 
-void opController(char token[]){
+int opController(char token[]){
     int i=0;
-        if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'||(int)token[i]<=255||(int)token[i]>=0){
-            i++;
-            if(token[i]=='X'){
-                printf("Hatasiz");
-            } else{
-                printf("hatali");
-
-            }
-        }else
-        {
-            printf("hatali");
+    if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'){
+        i++;
+        if(token[i]=='X'){
+            printf("\nHatasiz %s",token);
+            return 1;
+        } else{
+            printf("\nhatali %s",token);
+            return 0;
         }
+    }
+    else if((int)token[i]<3 && (int)token[i]>0)
+    {
+        i++;
+        if((int)token[i]<10 && (int)token[i]>=0){
+            i++;
+            if((int)token[i]<=5 && (int)token[i]>=0){
+                printf("\nhatasiz %s",token);
+                return 1;
+            }
+        } else
+        {
+            printf("\nhatali %s",token);
+            return 0;
+        }
+    }
+    else
+    {
+        printf("\nhatali %s",token);
+        return 0;
+    }
 }
 void EtiketController(char token[]){
 
@@ -44,16 +63,20 @@ void EtiketController(char token[]){
 }
 int CharCompare(char grammarToken[],char input[]){
     int i=0;
+    bool a=true;
     while (input[i] != '\0'){
         if(grammarToken[i]==input[i]){
-            printf("hatasiz");
-            break;
+            i++;
         } else
         {
-            printf("hatali");
+            a=false;
             break;
         }
-
+    }
+    if(a){
+        printf("\nhatasiz %s",input);
+    } else{
+        printf("\nhatali %s",input);
     }
 }
 
@@ -64,8 +87,10 @@ int main() {
     struct {
         char token[10];
     } Token[100];
-
-    if ((fp = fopen("ornek.txt", "r"))) {
+    char fileName[]="";
+    printf("dosya adini giriniz:");
+    gets(fileName);
+    if ((fp = fopen(fileName, "r"))) {
         int j = 0;
 
         while (!feof(fp)) {
@@ -76,7 +101,7 @@ int main() {
 
         char array[j];
 
-        fp2 = fopen("ornek.txt", "r");
+        fp2 = fopen(fileName, "r");
 
         for (int i = 0; i < j; ++i) {
             array[i] = getc(fp2);
