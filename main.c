@@ -2,7 +2,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 
-
 int opController(char token[]){
     int i=0;
     if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'){
@@ -47,16 +46,16 @@ void EtiketController(char token[]){
             if(token[i+1]=='\0'){
                 if(token[i]=='1'||token[i]=='2'||token[i]=='3'||token[i]=='4'||
                 token[i]=='5'||token[i]=='6'||token[i]=='7'||token[i]=='8'||token[i]=='9'){
-                    printf("hatasiz\n");
+                    printf("\nhatasiz %s",token);
                     break;
                 }else
                 {
-                    printf("hatali\n");
+                    printf("\nhatali %s",token);
                     break;
                 }
             }
         } else{
-            printf("hatali\n");
+            printf("\nhatali %s",token);
             break;
         }
     }
@@ -221,10 +220,8 @@ int main() {
                     }
                     break;
                     default:
-                    printf("hatali");
+                    printf("\nhatali");
                     break;
-
-
             }
         }
         printf("\n\n\n");
