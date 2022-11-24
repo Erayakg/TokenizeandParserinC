@@ -1,6 +1,19 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
+#include <stdlib.h>
+
+void constController(char token[]){
+
+    int newToken;
+    newToken=atoi(token);
+
+    if(newToken<255 && newToken>0){
+        printf("\nhatasiz sabit: %d",newToken);
+    } else{
+        printf("\nhatali sabit: %d",newToken);
+    }
+}
 
 int opController(char token[]){
     int i=0;
@@ -14,20 +27,14 @@ int opController(char token[]){
             return 0;
         }
     }
-    else if((int)token[i]<3 && (int)token[i]>0)
+    else if(token[i]=='1'||token[i]=='2')
     {
-        i++;
-        if((int)token[i]<10 && (int)token[i]>=0){
-            i++;
-            if((int)token[i]<=5 && (int)token[i]>=0){
-                printf("\nhatasiz %s",token);
-                return 1;
-            }
-        } else
-        {
-            printf("\nhatali %s",token);
-            return 0;
-        }
+        constController(token);
+    }
+    else if(token[i]=='['){
+
+        constController(token[i]);
+
     }
     else
     {
@@ -87,9 +94,10 @@ int main() {
         char token[10];
     } Token[100];
     char fileName[]="";
-    printf("dosya adini giriniz:");
-    gets(fileName);
-    if ((fp = fopen(fileName, "r"))) {
+    //printf("dosya adini giriniz:");
+    char dosyadi[]="ornek.txt";
+    //gets(fileName);
+    if ((fp = fopen(dosyadi, "r"))) {
         int j = 0;
 
         while (!feof(fp)) {
@@ -100,7 +108,7 @@ int main() {
 
         char array[j];
 
-        fp2 = fopen(fileName, "r");
+        fp2 = fopen(dosyadi, "r");
 
         for (int i = 0; i < j; ++i) {
             array[i] = getc(fp2);
@@ -225,7 +233,7 @@ int main() {
             }
         }
         printf("\n\n\n");
-    for (int b = 0; b <l; b++) {
+    for (int b = 0; b <l+1; b++) {
         printf("<<Token>>");
         printf("%s", Token[b].token);
         printf("<<Token>>");
@@ -237,5 +245,3 @@ int main() {
     }
 
 }
-
-
