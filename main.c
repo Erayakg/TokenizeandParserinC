@@ -2,6 +2,12 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
+int pow(int taban,int us){
+    if(us==0){
+        return 1;
+    }
+    return taban* pow(taban,us-1);
+}
 
 void constController(char token[]){
 
@@ -14,7 +20,21 @@ void constController(char token[]){
         printf("\nhatali sabit: %d",newToken);
     }
 }
-
+void ramController(char token[]){
+    int i=0;
+    char newtokens[4];
+    int j=i+1;
+    if(token[i]=='['){
+        while (token[i]!=']'){
+        newtokens[i]=token[j];
+        i++;
+        j++;
+        }
+        newtokens[j]='/0';
+    }
+    printf("\nram:");
+    constController(newtokens);
+}
 int opController(char token[]){
     int i=0;
     if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'){
@@ -27,14 +47,12 @@ int opController(char token[]){
             return 0;
         }
     }
-    else if(token[i]=='1'||token[i]=='2')
+    else if(token[i]=='1'||token[i]=='2'||token[i]=='3'||token[i]=='4'||token[i]=='5'||token[i]=='6'||token[i]=='7'||token[i]=='8'||token[i]=='9')
     {
         constController(token);
     }
     else if(token[i]=='['){
-
-        constController(token[i]);
-
+        ramController(token);
     }
     else
     {
@@ -45,7 +63,6 @@ int opController(char token[]){
 void EtiketController(char token[]){
 
     int i=0;
-
     char etiket[] = "ETIKET";
     while (token[i] != '\0'){
         if(etiket[i] == token[i]){
@@ -119,8 +136,7 @@ int main() {
         int r = 0;
         int l = 0;
         for (int s = 0; s < j; s++) {
-            if (array[s] ==toascii(0x0A) || array[s] == toascii(0x2C) || array[s] == toascii(91) ||
-                array[s] == toascii(93) || array[s] == toascii(32) || array[s] == toascii(0x3A)) {
+            if (array[s] ==toascii(0x0A) || array[s] == toascii(0x2C) || array[s] == toascii(32) || array[s] == toascii(0x3A)) {
                 Token[l].token[r] = '\0';
                 s++;
                 r = 0;
