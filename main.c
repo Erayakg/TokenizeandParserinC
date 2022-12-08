@@ -2,15 +2,10 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
-int pow(int taban,int us){
-    if(us==0){
-        return 1;
-    }
-    return taban* pow(taban,us-1);
-}
 
 void constController(char token[]){
-
+/*  Fonksiyon girilen char değerini alır ve tipini integer olarak değiştirir.
+ *  girilen sayının 0 ile 255  arasında bir sayı olduğu kontrol edilir */
     int newToken;
     newToken=atoi(token);
 
@@ -21,10 +16,11 @@ void constController(char token[]){
     }
 }
 void ramController(char token[]){
+    /* Grammerdeki [int] değerini kontrol eden fonksiyondur.*/
     int i=0;
     char newtokens[4];
     int j=i+1;
-    if(token[i]=='['){
+    if(token[i]=='['){//ilk eleman [ ise başlar ve ] değeri gelene kadar bir başka diziye atar.Böylece sadece köşeli parantez içindeki değer okunur
         while (token[i]!=']'){
         newtokens[i]=token[j];
         i++;
@@ -36,8 +32,10 @@ void ramController(char token[]){
     constController(newtokens);
 }
 int opController(char token[]){
+    /*gramerdeki <op> AX | BX | CX | DX | [<sabit>] | <sabit> kontrol edildiği fonksiyondur
+     * */
     int i=0;
-    if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'){
+    if(token[i]=='A'||token[i]=='B'||token[i]=='C'||token[i]=='D'){//ilk karakter yandakilerden biriyse diğeri x olmak zorundadır
         i++;
         if(token[i]=='X'){
             printf("\nHatasiz %s",token);
@@ -49,9 +47,11 @@ int opController(char token[]){
     }
     else if(token[i]=='1'||token[i]=='2'||token[i]=='3'||token[i]=='4'||token[i]=='5'||token[i]=='6'||token[i]=='7'||token[i]=='8'||token[i]=='9')
     {
+        // ilk karakter sayıysa sabit kontrolü yapılır.(0-255 arası)
         constController(token);
     }
     else if(token[i]=='['){
+        // ilk karakter köşeli parantez ise ram kontrolü yapılır
         ramController(token);
     }
     else
@@ -61,13 +61,13 @@ int opController(char token[]){
     }
 }
 void EtiketController(char token[]){
-
+    /*gramerdeki <etiket>  ETIKET1 | ETIKET2 | … | ETIKET9 kontrolünün yapıldığı fonksiyondur.*/
     int i=0;
-    char etiket[] = "ETIKET";
+    char etiket[] = "ETIKET";//gelen token bu string ifadeyle karşılaştrılır,
     while (token[i] != '\0'){
         if(etiket[i] == token[i]){
             i++;
-            if(token[i+1]=='\0'){
+            if(token[i+1]=='\0'){//karşılaştırma hatasız ise son karakter kontrolü yapılır
                 if(token[i]=='1'||token[i]=='2'||token[i]=='3'||token[i]=='4'||
                 token[i]=='5'||token[i]=='6'||token[i]=='7'||token[i]=='8'||token[i]=='9'){
                     printf("\nhatasiz %s",token);
@@ -85,6 +85,7 @@ void EtiketController(char token[]){
     }
 }
 int CharCompare(char grammarToken[],char input[]){
+    /*input olarak gelen 2 karakter dizisini karşılaştırır*/
     int i=0;
     bool a=true;
     while (input[i] != '\0'){
@@ -109,12 +110,11 @@ int main() {
     FILE *fp2;
     struct {
         char token[10];
-    } Token[100];
+    } Token[100];//dosyadaki kelimelerin struct yapısı oluşturulur
     char fileName[]="";
-    //printf("dosya adini giriniz:");
-    char dosyadi[]="ornek.txt";
-    //gets(fileName);
-    if ((fp = fopen(dosyadi, "r"))) {
+    printf("dosya adini giriniz:");
+    gets(fileName);
+    if ((fp = fopen(fileName, "r"))) {
         int j = 0;
 
         while (!feof(fp)) {
@@ -125,17 +125,18 @@ int main() {
 
         char array[j];
 
-        fp2 = fopen(dosyadi, "r");
+        fp2 = fopen(fileName, "r");
 
         for (int i = 0; i < j; ++i) {
             array[i] = getc(fp2);
         }
-
+        //yukarıdaki işlemlerde dosya açılır okunur ve bütün elemanlar bir diziye aktarılır.
         fclose(fp2);
 
         int r = 0;
         int l = 0;
         for (int s = 0; s < j; s++) {
+            //ayraçlara göre tokenlaştırma işlemi yapılır
             if (array[s] ==toascii(0x0A) || array[s] == toascii(0x2C) || array[s] == toascii(32) || array[s] == toascii(0x3A)) {
                 Token[l].token[r] = '\0';
                 s++;
@@ -158,6 +159,13 @@ int main() {
         char dk[]="DK";
         char db[]="DB";
         int g=0;
+        printf("\n <<  Tokens  >> \n");
+        for (int b = 0; b <l+1; b++) {
+            printf("<<Token>>");
+            printf("%s", Token[b].token);
+            printf("<<Token>>");
+            printf("\n\n");
+        }
         for (int d = 0; d <  l; d++) {
             switch (Token[d].token[g]) {
                 case  'T':
@@ -198,13 +206,13 @@ int main() {
                     break;
                 case 'V':
                     if(Token[d].token[g+2]=='Y'){
-                        CharCompare(vey,Token[d].token);
+                        CharCompare(vey,Token[d].token);//VEY kelimesi kontrol edilir
                         d++;
                         opController(Token[d].token);
                         d++;
                         opController(Token[d].token);
                     } else{
-                        CharCompare(ve,Token[d].token);
+                        CharCompare(ve,Token[d].token);//VE kelimesi kontrol edilir
                         d++;
                         opController(Token[d].token);
                         d++;
@@ -215,30 +223,30 @@ int main() {
                     if(Token[d].token[g+1]=='S')
                     {
                             if(Token[d].token[g+2]=='D'){
-                                CharCompare(dsd,Token[d].token);
+                                CharCompare(dsd,Token[d].token);//DSD kelimesi kontrol edilir
                                 d++;
                                 EtiketController(Token[d].token);
                             } else{
-                                CharCompare(ds,Token[d].token);
+                                CharCompare(ds,Token[d].token);//DS kelimesi kontrol edilir
                                 d++;
                                 EtiketController(Token[d].token);
                             }
                     }
                     else if(Token[d].token[g+1]=='A')
                     {
-                        CharCompare(dal,Token[d].token);
+                        CharCompare(dal,Token[d].token);//DAL kelimesi kontrol edilir
                         d++;
                         EtiketController(Token[d].token);
                     }
                     else if(Token[d].token[g+1]=='K')
                     {
-                        CharCompare(dk,Token[d].token);
+                        CharCompare(dk,Token[d].token);//DK kelimesi kontrol edilir
                         d++;
                         EtiketController(Token[d].token);
                     }
                     else if(Token[d].token[g+1]=='B')
                     {
-                        CharCompare(db,Token[d].token);
+                        CharCompare(db,Token[d].token);//DB kelimesi kontrol edilir
                         d++;
                         EtiketController(Token[d].token);
                     }
@@ -249,12 +257,7 @@ int main() {
             }
         }
         printf("\n\n\n");
-    for (int b = 0; b <l+1; b++) {
-        printf("<<Token>>");
-        printf("%s", Token[b].token);
-        printf("<<Token>>");
-        printf("\n\n");
-    }
+
 }
     else {
         printf("dosya bulunamadi");
