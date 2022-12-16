@@ -1,13 +1,28 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdbool.h>
-#include <stdlib.h>
-
+int converterInt(char value[]){
+    int i=0;
+    int j=1;
+    int newValue=0;
+    while (value[i]!='\0'){
+        i++;
+        j=j*10;
+    }
+    j=j/10;
+    int s;
+    for (int k = 0; k <i ; k++) {
+        s=(int)value[k];
+        newValue+=(s-48)*j;
+        j=j/10;
+    }
+    return  newValue;
+}
 void constController(char token[]){
 /*  Fonksiyon girilen char değerini alır ve tipini integer olarak değiştirir.
  *  girilen sayının 0 ile 255  arasında bir sayı olduğu kontrol edilir */
     int newToken;
-    newToken=atoi(token);
+    newToken=converterInt(token);
 
     if(newToken<255 && newToken>0){
         printf("\nhatasiz sabit: %d",newToken);
@@ -15,10 +30,11 @@ void constController(char token[]){
         printf("\nhatali sabit: %d",newToken);
     }
 }
+
 void ramController(char token[]){
     /* Grammerdeki [int] değerini kontrol eden fonksiyondur.*/
     int i=0;
-    char newtokens[4];
+    char newtokens[5];
     int j=i+1;
     if(token[i]=='['){//ilk eleman [ ise başlar ve ] değeri gelene kadar bir başka diziye atar.Böylece sadece köşeli parantez içindeki değer okunur
         while (token[i]!=']'){
@@ -26,7 +42,7 @@ void ramController(char token[]){
         i++;
         j++;
         }
-        newtokens[j]='/0';
+        newtokens[j-2]='\0';
     }
     printf("\nram:");
     constController(newtokens);
@@ -105,7 +121,6 @@ int CharCompare(char grammarToken[],char input[]){
 }
 
 int main() {
-
     FILE *fp;
     FILE *fp2;
     struct {
